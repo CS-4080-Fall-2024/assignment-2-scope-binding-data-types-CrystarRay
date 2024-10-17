@@ -1,0 +1,114 @@
+Question 1: Parse tree and leftmost derivation.
+
+
+
+     Statement
+   	 |
+     Assignment
+    /         	\
+Identifier  =  Expression
+|                   |
+A                 Term
+               /         \
+          Term       *    Factor
+          |                  |
+        Factor               |
+          |                  |
+     Identifier          (Expression)
+          |                  |
+          B                  |
+                             |
+                           Term
+                          /     \
+                     Term    *    Factor
+                     |                |
+                  Factor              |
+                     |                |
+               Identifier       (Expression)
+                     |                |
+                     C              Term
+                                    /     \
+                          Expression   +    Term
+                           |                  |
+                          Term                |
+                           |                  |
+                        Factor              Factor
+                           |                  |
+                      Identifier        Identifier
+                           |                  |
+                           A                  B
+
+
+Question 2: Scope concepts (static scope, dynamic scope with deep binding, dynamic scope with shallow binding).
+
+(a)
+foo(u, 13) is called. u = 42 and w = 13.
+Inside foo, v is assigned the value 42 (the value of x).
+bar(add) is called, and inside bar, a local u is assigned the value w = 17.
+add(v) is called with v = 69 (global v).
+In add(z), z is 69. The global u is updated as u := 69 + 42 + 69 = 180.
+
+bar v = 69
+
+foo(u, 13)
+v = 69
+u = 42
+w = 17
+
+main
+u = 42
+v = 69
+w = 17
+
+add(v)
+u = v + u + v
+  = 69 + 42 +69
+  = 180
+
+(b)
+foo(u, 13) is called. Inside foo, v is set to 42.
+bar(add) is called, which defines a local u = 17 and then calls add(v).
+Since deep binding uses the environment when add was defined (global scope), v get passed as an argument so v from foo. v is 42.
+The calculation inside add is: u := 42 + 42 + 42 = 126.
+
+bar v = 42
+
+foo(u, 13)
+v = 42
+u = 42
+w = 17
+
+main
+u = 42
+v = 69
+w = 17
+
+add(v)
+u = v + u + v
+  = 42 + 42 + 42
+  = 126
+
+(c)
+foo(u, 13) is called. Here, u = 42 and w = 13.
+Inside foo, v is set to 42.
+bar(add) is called, which defines a local u = 17 and then calls add(v).
+In shallow binding, when add(v) is called, the value of v is the most recent one (from foo), which is 42.
+In add(z), z = 69 and u refers to the local u from bar (u = 17).
+u := 42 + 17 + 42 = 101
+
+bar
+v = 42
+u = 17
+
+foo(u, 13)
+v = 42
+u = 42
+w = 17
+
+main
+u = 42
+v = 69
+w = 17
+
+add(v)
+u = 42 + 17 + 42 = 101
